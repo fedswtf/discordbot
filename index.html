@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Discord Bot - High Quality Bot for Your Server</title>
+    <style>
+        :root {
+            --primary: #5865F2;
+            --primary-dark: #4752c4;
+            --background: #111827;
+            --foreground: #e5e7eb;
+            --accent: #ec4899;
+            --glow-color: rgba(88, 101, 242, 0.6);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--background);
+            color: var(--foreground);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Animated background */
+        .background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.15;
+            background: radial-gradient(circle at 10% 20%, var(--primary) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, var(--accent) 0%, transparent 50%);
+            filter: blur(80px);
+            animation: backgroundPulse 15s ease-in-out infinite alternate;
+        }
+
+        @keyframes backgroundPulse {
+            0% {
+                transform: scale(1);
+                opacity: 0.15;
+            }
+            50% {
+                transform: scale(1.2);
+                opacity: 0.2;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 0.15;
+            }
+        }
+
+        /* Header styles */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 2rem;
+            position: sticky;
+            top: 0;
+            background-color: rgba(17, 24, 39, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 100;
+            border-bottom: 1px solid rgba(88, 101, 242, 0.2);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .logo img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary);
+        }
+
+        .logo span {
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        nav a {
+            color: var(--foreground);
+            text-decoration: none;
+            font-weight: 600;
+            position: relative;
+            padding: 0.5rem 0;
+            transition: all 0.3s;
+        }
+
+        nav a:hover {
+            color: var(--primary);
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--primary);
+            transition: width 0.3s ease;
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        .invite-btn {
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            box-shadow: 0 0 15px var(--glow-color);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .invite-btn::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transform: rotate(45deg);
+            transition: transform 0.6s;
+        }
+
+        .invite-btn:hover::before {
+            transform: translate(100%, 100%) rotate(45deg);
+        }
+
+        .invite-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 25px var(--glow-color);
+        }
+
+        .invite-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Hero section */
+        .hero {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 6rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            min-height: calc(100vh - 80px);
+        }
+
+        .hero-content {
+            width: 50%;
+            animation: fadeInUp 1s ease;
+        }
+
+        .hero-image {
+            width: 45%;
+            display: flex;
+            justify-content: center;
+            animation: floatUpDown 5s ease-in-out infinite;
+        }
+
+        .hero-image img {
+            max-width: 100%;
+            border-radius: 12px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        @keyframes floatUpDown {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.1;
+            background: linear-gradient(90deg, var(--foreground), var(--primary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+        }
+
+        .glow-text {
+            color: var(--primary);
+            text-shadow: 0 0 10px var(--glow-color);
+            font-weight: 700;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+            color: #9ca3af;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .secondary-btn {
+            padding: 0.75rem 1.5rem;
+            background: transparent;
+            color: var(--foreground);
+            font-weight: 600;
+            border: 2px solid var(--primary);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+
+        .secondary-btn:hover {
+            background-color: rgba(88, 101, 242, 0.1);
+            transform: translateY(-3px);
+        }
+
+        /* Features section */
+        .features {
+            padding: 6rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-header h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(90deg, var(--foreground), var(--primary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-weight: 700;
+        }
+
+        .section-header p {
+            font-size: 1.1rem;
+            color: #9ca3af;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 2rem;
+            transition: all 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 30px rgba(0, 0, 0, 0.2);
+            border-color: rgba(88, 101, 242, 0.3);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 0 20px var(--glow-color);
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(90deg, var(--foreground), var(--primary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .feature-card p {
+            color: #9ca3af;
+            line-height: 1.6;
+        }
+
+        /* Testimonials section */
+        .testimonials {
+            padding: 6rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            background: linear-gradient(rgba(17, 24, 39, 0.7), rgba(17, 24, 39, 0.9)), url('/api/placeholder/1200/400') center/cover;
+            background-attachment: fixed;
+            border-radius: 12px;
+        }
+
+        .testimonial-cards {
+            display: flex;
+            gap: 2rem;
+            overflow-x: auto;
+            padding: 1rem 0;
+            scroll-snap-type: x mandatory;
+            scroll-behavior: smooth;
+        }
+
+        .testimonial-card {
+            flex: 0 0 calc(33.333% - 2rem);
+            min-width: 300px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            scroll-snap-align: start;
+        }
+
+        .testimonial-card p {
+            color: #9ca3af;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .testimonial-author img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--primary);
+        }
+
+        .testimonial-author-info h4 {
+            font-size: 1.1rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .testimonial-author-info p {
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        /* Statistics section */
+        .statistics {
+            padding: 6rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(88, 101, 242, 0.3);
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .stat-label {
+            color: #9ca3af;
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+
+        /* Footer */
+        footer {
+            background-color: rgba(17, 24, 39, 0.9);
+            padding: 4rem 2rem;
+            margin-top: 4rem;
+            border-top: 1px solid rgba(88, 101, 242, 0.2);
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            max-width: 1200px;
+            margin: 0 auto;
+            gap: 2rem;
+        }
+
+        .footer-logo {
+            max-width: 300px;
+        }
+
+        .footer-logo img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .footer-logo h3 {
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--foreground), var(--primary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .footer-logo p {
+            color: #9ca3af;
+            line-height: 1.6;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 4rem;
+        }
+
+        .footer-links-group h4 {
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
+            color: var(--foreground);
+        }
+
+        .footer-links-group ul {
+            list-style: none;
+        }
+
+        .footer-links-group li {
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-links-group a {
+            color: #9ca3af;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .footer-links-group a:hover {
+            color: var(--primary);
+        }
+
+        .footer-bottom {
+            max-width: 1200px;
+            margin: 2rem auto 0;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .footer-bottom p {
+            color: #9ca3af;
+        }
+
+        .footer-bottom .social-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .social-link {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .social-link:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-3px);
+        }
+
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            .hero {
+                flex-direction: column;
+                padding: 4rem 1.5rem;
+                text-align: center;
+            }
+
+            .hero-content, .hero-image {
+                width: 100%;
+            }
+
+            .hero-image {
+                margin-top: 3rem;
+                order: 2;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .cta-buttons {
+                justify-content: center;
+            }
+
+            nav ul {
+                display: none;
+            }
+
+            .footer-content {
+                flex-direction: column;
+            }
+
+            .footer-links {
+                flex-direction: column;
+                gap: 2rem;
+            }
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/ScrollTrigger.min.js"></script>
+</head>
+<body>
+    <!-- Animated background -->
+    <div class="background"></div>
+
+    <!-- Header with Logo and Navigation -->
+    <header>
+        <div class="logo">
+            <img src="/api/placeholder/100/100" alt="Bot Logo">
+            <span>YourBot</span>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#testimonials">Reviews</a></li>
+                <li><a href="#statistics">Stats</a></li>
+                <li><a href="#documentation">Documentation</a></li>
+            </ul>
+        </nav>
+        <a href="#" class="invite-btn">Add to Discord</a>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Elevate Your Discord Server with <span class="glow-text">YourBot</span></h1>
+            <p>The premium Discord bot designed to enhance your server experience with advanced moderation, engagement features, and customizable commands.</p>
+            <div class="cta-buttons">
+                <a href="#" class="invite-btn">Add to Discord</a>
+                <a href="#features" class="secondary-btn">Explore Features</a>
+            </div>
+        </div>
+        <div class="hero-image">
+            <img src="/api/placeholder/500/300" alt="Bot Preview">
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="section-header">
+            <h2>Powerful Features</h2>
+            <p>Designed to make your Discord server more engaging, secure, and fun.</p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">M</div>
+                <h3>Advanced Moderation</h3>
+                <p>Keep your server safe with powerful moderation tools including auto-mod, warning systems, and customizable rules.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">E</div>
+                <h3>Engagement Tools</h3>
+                <p>Boost activity with reaction roles, polls, giveaways, and custom welcome messages.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">M</div>
+                <h3>Music & Entertainment</h3>
+                <p>High-quality music playback with playlist support, games, and interactive commands.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">C</div>
+                <h3>Custom Commands</h3>
+                <p>Create your own commands with variables, cooldowns, and permission settings.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">I</div>
+                <h3>Intuitive Dashboard</h3>
+                <p>Configure your bot through an easy-to-use web dashboard with real-time changes.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">S</div>
+                <h3>Server Statistics</h3>
+                <p>Track your server's growth with detailed analytics and member activity insights.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="testimonials" id="testimonials">
+        <div class="section-header">
+            <h2>What Users Say</h2>
+            <p>Join thousands of satisfied server owners who trust YourBot.</p>
+        </div>
+        <div class="testimonial-cards">
+            <div class="testimonial-card">
+                <p>"YourBot has completely transformed our community server. The moderation tools alone saved us hours of manual work every week!"</p>
+                <div class="testimonial-author">
+                    <img src="/api/placeholder/100/100" alt="User Avatar">
+                    <div class="testimonial-author-info">
+                        <h4>Alex Johnson</h4>
+                        <p>Gaming Community Owner</p>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <p>"The quality of this bot is outstanding. Clean interface, reliable performance, and the custom commands feature lets us create unique experiences."</p>
+                <div class="testimonial-author">
+                    <img src="/api/placeholder/100/100" alt="User Avatar">
+                    <div class="testimonial-author-info">
+                        <h4>Maria Rodriguez</h4>
+                        <p>Education Server Admin</p>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <p>"Best investment for our Discord server. The engagement tools have increased our active user count by 40% in just one month!"</p>
+                <div class="testimonial-author">
+                    <img src="/api/placeholder/100/100" alt="User Avatar">
+                    <div class="testimonial-author-info">
+                        <h4>Jason Lee</h4>
+                        <p>Community Manager</p>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <p>"I've tried many Discord bots, but YourBot stands out with its reliability and premium features. Worth every penny!"</p>
+                <div class="testimonial-author">
+                    <img src="/api/placeholder/100/100" alt="User Avatar">
+                    <div class="testimonial-author-info">
+                        <h4>Sarah Miller</h4>
+                        <p>Art Community Founder</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Statistics Section -->
+    <section class="statistics" id="statistics">
+        <div class="section-header">
+            <h2>Bot Statistics</h2>
+            <p>Join a growing community of servers using YourBot.</p>
+        </div>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number">10K+</div>
+                <div class="stat-label">Servers</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">2M+</div>
+                <div class="stat-label">Users</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">99.9%</div>
+                <div class="stat-label">Uptime</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">50M+</div>
+                <div class="stat-label">Commands Used</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">
+                <img src="/api/placeholder/100/100" alt="Bot Logo">
+                <h3>YourBot</h3>
+                <p>The premium Discord bot solution for modern communities.</p>
+            </div>
+            <div class="footer-links">
+                <div class="footer-links-group">
+                    <h4>Product</h4>
+                    <ul>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#">Pricing</a></li>
+                        <li><a href="#">Documentation</a></li>
+                        <li><a href="#">Changelog</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links-group">
+                    <h4>Resources</h4>
+                    <ul>
+                        <li><a href="#">Support</a></li>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">Community</a></li>
+                        <li><a href="#">Status</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links-group">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="#">About</a></li>
+                        <li><a href="#">Contact</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 YourBot. All rights reserved.</p>
+            <div class="social-links">
+                <a href="#" class="social-link">X</a>
+                <a href="#" class="social-link">G</a>
+                <a href="#" class="social-link">D</a>
+                <a href="#" class="social-link">Y</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize GSAP animations
+        document.addEventListener('DOMContentLoaded', () => {
+            // Register ScrollTrigger plugin
+            gsap.registerPlugin(ScrollTrigger);
+            
+            // Feature cards animation
+            gsap.from('.feature-card', {
+                y: 50,
+                opacity: 0,
+                duration: 0.8,
+                stagger: 0.1,
+                scrollTrigger: {
+                    trigger: '.features-grid',
+                    start: 'top 80%',
+                }
+            });
+            
+            // Stat cards animation
+            gsap.from('.stat-card', {
+                scale: 0.8,
+                opacity: 0,
+                duration: 0.6,
+                stagger: 0.1,
+                scrollTrigger: {
+                    trigger: '.stats-grid',
+                    start: 'top 80%',
+                }
+            });
+            
+            // Testimonial cards animation
+            gsap.from('.testimonial-card', {
+                x: 100,
+                opacity: 0,
+                duration: 0.8,
+                stagger: 0.2,
+                scrollTrigger: {
+                    trigger: '.testimonial-cards',
+                    start: 'top 80%',
+                }
+            });
+            
+            // Smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+                    
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
